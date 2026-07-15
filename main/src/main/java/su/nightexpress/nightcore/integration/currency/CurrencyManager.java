@@ -76,8 +76,9 @@ public class CurrencyManager extends AbstractManager<NightCore> {
         this.addExternalLoader(CurrencyPlugins.PLAYER_POINTS, () -> this.loadIncompleted(PlayerPointsCurrency::new));
         this.addExternalLoader(CurrencyPlugins.VOTING_PLUGIN, () -> this.loadIncompleted(VotingPluginCurrency::new));
         this.addExternalLoader(CurrencyPlugins.ELITEMOBS, () -> this.loadIncompleted(EliteMobsCurrency::new));
-        this.addExternalLoader(CurrencyPlugins.COINS_ENGINE, () -> ExcellentEconomyCurrency
-            .getCurrencies(CurrencyId::forCoinsEngine).forEach(this::register));
+        // CoinsEngine 2.5 predates the ExcellentEconomy service API used by
+        // current nightcore. Do not resolve that API merely because
+        // CoinsEngine is enabled; Vault remains the compatible bridge.
 
         // Two variants for compatibility.
         this.addExternalLoader(CurrencyPlugins.EXCELLENT_ECONOMY, () -> {
