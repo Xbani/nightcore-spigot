@@ -58,6 +58,16 @@ public abstract class LangMessage implements LangValue {
         }
 
         MessageData.Builder builder = MessageData.builder();
+        // Some installations already have lang_*.yml files created by an older
+        // NightCore/SunLight version. The one-time messages_*.yml migration is
+        // skipped for those files, so legacy <output:"titles:..."> tags used to
+        // be rendered literally in chat. Parse them at read time as well.
+        if (MessageData.hasLegacyData(text.getFirst())) {
+            String inline = String.join(TagWrappers.BR, text);
+            String message = MessageData.extractAndParseOld(inline, builder);
+            return createFromData(message, builder.build());
+        }
+
         String dataLine = MessageData.extractAndParse(text.getFirst(), builder);
         MessageData data = builder.build();
 
